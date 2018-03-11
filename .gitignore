@@ -5,3 +5,5 @@
 __pycache__/
 media/
 jaintapp/config.cfg
+jaintapp/settings.py
+

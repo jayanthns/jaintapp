@@ -30,7 +30,7 @@ here = lambda a: os.path.join(os.path.abspath(os.path.dirname(__file__)), a)
 config = RawConfigParser()
 config.read(os.path.join(here(''), 'config.cfg'))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['13.127.129.1',]
 
 
 # Application definition
