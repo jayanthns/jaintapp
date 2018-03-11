@@ -21,4 +21,5 @@ app_name = 'jaintapp'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/account/', include('account.api.v1.urls')),
+    path('', include('common.urls')),
 ]

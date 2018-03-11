@@ -30,7 +30,7 @@ here = lambda a: os.path.join(os.path.abspath(os.path.dirname(__file__)), a)
 config = RawConfigParser()
 config.read(os.path.join(here(''), 'config.cfg'))
 
-ALLOWED_HOSTS = ['13.127.129.1',]
+ALLOWED_HOSTS = ['13.127.129.1', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -65,7 +65,7 @@ ROOT_URLCONF = 'jaintapp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,6 +132,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 REST_FRAMEWORK = {
