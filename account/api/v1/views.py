@@ -28,10 +28,21 @@ class RegisterUser(APIView):
 
     def post(self, request):
         serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             if user:
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                user = authenticate(
+                    email=request.data['email'].lower(),
+                    password=request.data['password']
+                )
+                if not user:
+                    raise AuthFailed(detail=None, code=None)
+
+                token = Token.objects.get_or_create(user=user)
+                print(token)
+                return Response({"token": token[0].key, "email": user.email, "username": user.username},
+                                status=status.HTTP_200_OK)
+                # return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -59,6 +70,20 @@ class LoginUser(APIView):
             return Response({"token": token[0].key, "email": user.email, "username": user.username}, status=status.HTTP_200_OK)
 
         raise IncorrectData(detail=serializer.errors, code=None)
+
+class CheckEmail(APIView):
+    """
+    Check duplicate email for register
+    """
+
+    permission_classes = (AllowAny,)
+
+    def get(self, request, email):
+        e_status = False
+        if User.objects.filter(email__iexact=email).first():
+            e_status = True
+
+        return Response({'email_exist': e_status}, status=status.HTTP_200_OK)
 
 
 class UserProfileAPI(APIView):

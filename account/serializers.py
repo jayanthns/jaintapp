@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from account.models import User
+from common.custom_exception import IncorrectData
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -12,7 +13,16 @@ class UserSerializer(serializers.ModelSerializer):
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all())]
     )
-    password = serializers.CharField(min_length=8, write_only=True)
+    password = serializers.CharField(min_length=5, write_only=True, max_length=16)
+    confirm_password = serializers.CharField(min_length=5, write_only=True, max_length=16)
+
+    def validate(self, data):
+        """
+        Check password and confirm password
+        """
+        if not data['confirm_password'] == data['password']:
+            raise IncorrectData(detail="Passwords did not match. Please enter same passwords.", code=400)
+        return data
 
     def create(self, validated_data):
         print("I AM HERE")
@@ -25,7 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password')
+        fields = ('id', 'username', 'email', 'password', 'confirm_password')
 
 
 class LoginSerializer(serializers.ModelSerializer):
