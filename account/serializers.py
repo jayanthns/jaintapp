@@ -38,6 +38,16 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'email', 'password', 'confirm_password')
 
 
+    """
+    {
+        "username": "username",
+        "email": "email",
+        "password": "password",
+        "confirm_password": "password"
+    }
+    """
+
+
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=256, required=True)
     password = serializers.CharField(min_length=8, write_only=True, required=True)
