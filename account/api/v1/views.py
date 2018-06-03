@@ -36,6 +36,7 @@ class RegisterUser(APIView):
                     password=request.data['password']
                 )
                 if not user:
+                    print("I AM HERE")
                     raise AuthFailed(detail=None, code=None)
 
                 token = Token.objects.get_or_create(user=user)
@@ -94,3 +95,10 @@ class UserProfileAPI(APIView):
         print(request.auth.user)
         serializer = UserProfileSerializer(request.auth.user).data
         return Response(serializer, status=status.HTTP_200_OK)
+
+"""
+{
+    "email": "sample@a.com",
+    "password": "samplepass"
+}
+"""
